@@ -3,6 +3,7 @@ const ctrl = require("../controllers/users-controllers");
 const validateRequestBody = require("../middleware/request-body-validator");
 const { schemas } = require("../models/mongo-user-schema");
 const { userAuthenticate } = require("../middleware/user-authenticate");
+const upload = require("../middleware/upload");
 
 const router = express.Router();
 
@@ -19,6 +20,12 @@ router.patch(
     userAuthenticate,
     validateRequestBody(schemas.updateSubscriptionSchema),
     ctrl.updateSubscription
+);
+router.patch(
+    "/avatars",
+    userAuthenticate,
+    upload.single("avatar"),
+    ctrl.updateAvatar
 );
 
 module.exports = { usersRouter: router };
