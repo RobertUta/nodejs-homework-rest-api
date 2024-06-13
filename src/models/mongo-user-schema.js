@@ -33,6 +33,14 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
+        verify: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+            required: [true, "Verify token is required"],
+        },
     },
     { versionKey: false, timestamps: true, strict: true }
 );
@@ -59,9 +67,23 @@ const updateSubscriptionSchema = Joi.object({
     .max(1)
     .min(1);
 
+const verifyEmail = Joi.object({
+    email: Joi.string()
+        .pattern(/^\S+@\S+\.\S+$/)
+        .required()
+        .messages({
+            "string.pattern.base":
+                "The email address does not match the required format",
+            "any.required": "Missing required field email",
+        }),
+})
+    .max(1)
+    .min(1);
+
 const schemas = {
     authSchema,
     updateSubscriptionSchema,
+    verifyEmail,
 };
 
 module.exports = { User, schemas };
